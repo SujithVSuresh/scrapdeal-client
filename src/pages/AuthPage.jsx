@@ -43,7 +43,7 @@ const handleLoginSubmit = async (formData) => {
 
 const handleSignupSubmit = async (formData) => {
   try {
-    const res = await axios.post('/auth/register', {
+    const res = await axios.post('/auth/signup', {
       ...formData,
       role: userType,
     });

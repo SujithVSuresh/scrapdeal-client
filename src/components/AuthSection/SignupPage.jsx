@@ -11,32 +11,45 @@ const SignupPage = ({ userType, onBack, onNavigateToLogin, onSubmit }) => {
     address: '',
     password: '',
     confirmPassword: '',
-    acceptTerms: false
+    acceptTerms: false,
   });
+  const [error, setError] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+    setError('');
+
     // Basic validation
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
-    
-    if (!formData.acceptTerms) {
-      alert('Please accept the terms and conditions');
+      setError('Passwords do not match');
       return;
     }
 
-    onSubmit({ userType, formData });
+    if (!formData.acceptTerms) {
+      setError('Please accept the terms and conditions');
+      return;
+    }
+
+    // Prepare payload for AuthController
+    const payload = {
+      name: formData.fullName,
+      email: formData.email,
+      password: formData.password,
+      address: formData.address,
+      phone: formData.phone,
+      ...(userType === 'buyer' && { businessName: formData.businessName }),
+    };
+
+    // Pass payload to onSubmit
+    onSubmit(payload);
   };
 
   return (
@@ -52,22 +65,34 @@ const SignupPage = ({ userType, onBack, onNavigateToLogin, onSubmit }) => {
           </button>
 
           <div className="text-center mb-8">
-            <div className={`w-12 h-12 bg-gradient-to-r ${
-              userType === 'seller' ? 'from-green-400 to-emerald-600' : 'from-blue-400 to-cyan-600'
-            } rounded-xl flex items-center justify-center mx-auto mb-4`}>
-              {userType === 'seller' ? <User className="w-6 h-6 text-white" /> : <Building className="w-6 h-6 text-white" />}
+            <div
+              className={`w-12 h-12 bg-gradient-to-r ${
+                userType === 'seller' ? 'from-green-400 to-emerald-600' : 'from-blue-400 to-cyan-600'
+              } rounded-xl flex items-center justify-center mx-auto mb-4`}
+            >
+              {userType === 'seller' ? (
+                <User className="w-6 h-6 text-white" />
+              ) : (
+                <Building className="w-6 h-6 text-white" />
+              )}
             </div>
             <h2 className="text-2xl font-bold text-white mb-2">
               Create {userType === 'seller' ? 'Seller' : 'Buyer'} Account
             </h2>
-            <p className="text-slate-300">Join ScrapSmart and start {userType === 'seller' ? 'selling' : 'buying'} today</p>
+            <p className="text-slate-300">
+              Join ScrapSmart and start {userType === 'seller' ? 'selling' : 'buying'} today
+            </p>
           </div>
+
+          {error && (
+            <div className="bg-red-500/20 border border-red-500/50 text-red-300 p-3 rounded-xl mb-6 text-center">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
-                Full Name
-              </label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Full Name</label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
                 <input
@@ -84,9 +109,7 @@ const SignupPage = ({ userType, onBack, onNavigateToLogin, onSubmit }) => {
 
             {userType === 'buyer' && (
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Business Name
-                </label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Business Name</label>
                 <div className="relative">
                   <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
                   <input
@@ -103,9 +126,7 @@ const SignupPage = ({ userType, onBack, onNavigateToLogin, onSubmit }) => {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
-                Email Address
-              </label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Email Address</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
                 <input
@@ -121,9 +142,7 @@ const SignupPage = ({ userType, onBack, onNavigateToLogin, onSubmit }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
-                Phone Number
-              </label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Phone Number</label>
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
                 <input
@@ -139,9 +158,7 @@ const SignupPage = ({ userType, onBack, onNavigateToLogin, onSubmit }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
-                Address
-              </label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Address</label>
               <div className="relative">
                 <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
                 <input
@@ -157,9 +174,7 @@ const SignupPage = ({ userType, onBack, onNavigateToLogin, onSubmit }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
-                Password
-              </label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
                 <input
@@ -182,9 +197,7 @@ const SignupPage = ({ userType, onBack, onNavigateToLogin, onSubmit }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
-                Confirm Password
-              </label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Confirm Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
                 <input
@@ -210,16 +223,22 @@ const SignupPage = ({ userType, onBack, onNavigateToLogin, onSubmit }) => {
               />
               <label className="text-sm text-slate-300">
                 I agree to the{' '}
-                <a href="#" className="text-green-400 hover:text-green-300">Terms of Service</a>
-                {' '}and{' '}
-                <a href="#" className="text-green-400 hover:text-green-300">Privacy Policy</a>
+                <a href="#" className="text-green-400 hover:text-green-300">
+                  Terms of Service
+                </a>{' '}
+                and{' '}
+                <a href="#" className="text-green-400 hover:text-green-300">
+                  Privacy Policy
+                </a>
               </label>
             </div>
 
             <button
               type="submit"
               className={`w-full bg-gradient-to-r ${
-                userType === 'seller' ? 'from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700' : 'from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700'
+                userType === 'seller'
+                  ? 'from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'
+                  : 'from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700'
               } text-white py-3 rounded-xl font-semibold transition-all transform hover:scale-105`}
             >
               Create Account
@@ -229,7 +248,7 @@ const SignupPage = ({ userType, onBack, onNavigateToLogin, onSubmit }) => {
           <div className="text-center mt-6">
             <p className="text-slate-400">
               Already have an account?{' '}
-              <button 
+              <button
                 onClick={onNavigateToLogin}
                 className="text-green-400 hover:text-green-300 font-medium"
               >
