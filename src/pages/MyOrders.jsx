@@ -83,7 +83,7 @@ const MyOrders = () => {
                 >
                   <div className="w-16 h-16 rounded-lg flex items-center justify-center text-2xl mr-4 bg-gradient-to-r from-emerald-500 to-emerald-600">
                     <img
-                      src={`http://localhost:3000${order.product.image}`}
+                      src={`https://scrapdeal.onrender.com${order.product.image}`}
                       alt={order.product.name}
                       className="w-full h-full object-cover rounded-lg"
                     />
