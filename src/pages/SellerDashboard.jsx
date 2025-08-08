@@ -24,8 +24,6 @@ const SellerDashboard = () => {
   const { logout } = useContext(AuthContext);
   const [listings, setListings] = useState([]);
 
-  console.log(listings, "this is the listingggg.....");
-
   useEffect(() => {
     const fetchMyProducts = async () => {
       try {
@@ -326,7 +324,7 @@ const SellerDashboard = () => {
                       className={`w-16 h-16 rounded-lg flex items-center justify-center text-2xl mr-4 ${item.gradient} bg-gradient-to-r`}
                     >
                       <img
-                        src={`http://localhost:3000${item.image}`}
+                        src={`https://scrapdeal.onrender.com${item.image}`}
                         alt="img"
                         className="w-full h-full object-cover rounded-lg"
                       />

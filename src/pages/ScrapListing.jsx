@@ -155,7 +155,7 @@ const ScrapListingsPage = () => {
                 <div className="p-5">
                   <div className="flex items-start">
                     <div className="w-16 h-16 rounded-lg bg-slate-700/50 flex items-center justify-center text-3xl mr-4">
-                      <img src={`http://localhost:3000${item.image}`} alt="" />
+                      <img src={`https://scrapdeal.onrender.com${item.image}`} alt="" />
                     </div>
                     <div className="flex-1">
                       <h3 className="font-semibold text-lg text-white mb-1">

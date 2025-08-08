@@ -230,7 +230,7 @@ const ScrapDetailPage = () => {
               ></div>
               <div className="aspect-[4/3] bg-slate-700 flex items-center justify-center">
                 <img
-                  src={`http://localhost:3000${scrapItem?.image}`}
+                  src={`https://scrapdeal.onrender.com${scrapItem?.image}`}
                   alt={scrapItem.name}
                   className="object-cover w-full h-full"
                 />
